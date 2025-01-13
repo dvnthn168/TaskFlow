@@ -4,10 +4,8 @@ import (
 	"context"
 
 	"github.com/dvnthn168/TaskFlow/gen/userpb"
-	"github.com/dvnthn168/TaskFlow/pkg/helpers"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type UserService struct {

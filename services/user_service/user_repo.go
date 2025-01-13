@@ -42,42 +42,42 @@ func (r *userRepository) GetUserByEmail(ctx context.Context, email string) (*Use
 	return user, err
 }
 
-func (r *UserRepository) GenerateToken(ctx context.Context, userDto *usermd.UserDTO) (*usermd.SessionUserDTO, error) {
-	user := token.User{
-		UserID:    userDto.UserID,
-		UserName:  userDto.UserName,
-		Email:     userDto.Email,
-		FcmDevice: "",
-	}
+// func (r *UserRepository) GenerateToken(ctx context.Context, userDto *usermd.UserDTO) (*usermd.SessionUserDTO, error) {
+// 	user := token.User{
+// 		UserID:    userDto.UserID,
+// 		UserName:  userDto.UserName,
+// 		Email:     userDto.Email,
+// 		FcmDevice: "",
+// 	}
 
-	token, _, err := r.maker.CreateToken(user, r.config.AccessTokenDuration)
-	if err != nil {
-		return nil, err
-	}
+// 	token, _, err := r.maker.CreateToken(user, r.config.AccessTokenDuration)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	refreshToken, payload, err := r.maker.CreateToken(user, r.config.RefreshTokenDuration)
-	if err != nil {
-		return nil, err
-	}
+// 	refreshToken, payload, err := r.maker.CreateToken(user, r.config.RefreshTokenDuration)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	mtdt := metadata.ExtractMetadata(ctx)
-	_, err = r.store.CreateSessionUser(ctx, usersqlc.CreateSessionUserParams{
-		ID:           payload.ID,
-		UserID:       user.UserID,
-		RefreshToken: refreshToken,
-		UserAgent:    mtdt.UserAgent,
-		ClientIp:     mtdt.ClientIP,
-		IsBlocked:    false,
-		FcmDevice:    user.FcmDevice,
-		ExpiresAt:    payload.ExpiresAt,
-	})
+// 	mtdt := metadata.ExtractMetadata(ctx)
+// 	_, err = r.store.CreateSessionUser(ctx, usersqlc.CreateSessionUserParams{
+// 		ID:           payload.ID,
+// 		UserID:       user.UserID,
+// 		RefreshToken: refreshToken,
+// 		UserAgent:    mtdt.UserAgent,
+// 		ClientIp:     mtdt.ClientIP,
+// 		IsBlocked:    false,
+// 		FcmDevice:    user.FcmDevice,
+// 		ExpiresAt:    payload.ExpiresAt,
+// 	})
 
-	if err != nil {
-		return nil, err
-	}
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	return &usermd.SessionUserDTO{
-		AccessToken:  token,
-		RefreshToken: refreshToken,
-	}, nil
-}
+// 	return &usermd.SessionUserDTO{
+// 		AccessToken:  token,
+// 		RefreshToken: refreshToken,
+// 	}, nil
+// }
