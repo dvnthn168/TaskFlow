@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+option go_package = "barbershop168store/pkg/user/proto;userpb";
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+message User {
+    int32 user_id = 1;
+    string username = 3;
+    string email = 5;
+    string password = 6;
+}
+
+message PayloadWithSignleUser {
+    User user = 1;
+}
+
+message PayloadWithUserID {
+    int32 user_id = 1; 
+}
+
+message VerifyUserRequest {
+    int32 user_id = 1; 
+    string otp = 2;
+}
+
+message ResendUserRequest {
+    int32 user_id = 1; 
+    string email = 2; 
+}
+
+message LoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    int32 user_id = 1;
+    string access_token = 2;
+    string refresh_token = 3;
+}
+
+message RefreshTokenRequest {
+    string refresh_token = 1;
+}
+
+message RefreshTokenResponse {
+    string access_token = 1; 
+    string refresh_token = 2;
+}
+
+message RecoveryUserRequest {
+    string username = 1;
+}
+
+message PasswordResetRequest {
+    int32 user_id = 1;
+    string otp = 2;
+    string password = 3;
+}
+
+service Users {
+    rpc AddUser(PayloadWithSignleUser) returns (PayloadWithUserID) {
+        option (google.api.http) = {
+            post: "/v1/users"
+            body: "*"
+        };
+    }
+
+    rpc VerifyUser(VerifyUserRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post: "/v1/users/verify"
+            body: "*"
+        };
+    }
+
+    rpc ResendVerifyUser(ResendUserRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post: "/v1/users/resend-verify"
+            body: "*"
+        };
+    }
+
+    rpc LoginUser(LoginRequest) returns (LoginResponse) {
+        option (google.api.http) = {
+            post: "/v1/users/login"
+            body: "*"
+        };
+    }
+
+    rpc RecoveryUser(RecoveryUserRequest) returns (PayloadWithUserID) {
+        option (google.api.http) = {
+            post: "/v1/users/recovery"
+            body: "*"
+        };
+    }
+
+    rpc PasswordReset(PasswordResetRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            patch: "/v1/users/password-reset"
+            body: "*"
+        };
+    }
+
+    rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse) {
+        option (google.api.http) = {
+            post: "/v1/users/ref-token"
+            body: "*"
+        };
+    }
+}
